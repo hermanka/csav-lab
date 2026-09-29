@@ -1,21 +1,6 @@
-# Airport Cybersecurity Lab v0.2 — PHP + MariaDB
+# Airport Cybersecurity Lab
 
-Virtual Airport Cybersecurity Laboratory untuk Praktikum P1.
-
-## Arsitektur
-
-Passenger
-  |
-  v
-Airport Portal :8080
-  |--------------------|
-  v                    v
-FIDS :8081          Check-in :8082
-  |                    |
-  +---------> Airport API
-                    |
-                    v
-                 MariaDB
+Virtual Airport Cybersecurity Laboratory untuk Praktikum Cybersecurity in Aviation.
 
 ## Teknologi
 
@@ -26,7 +11,7 @@ FIDS :8081          Check-in :8082
 - PHP cURL untuk komunikasi antar-service
 - PDO MySQL untuk akses database
 
-## Menjalankan
+## Menjalankan Lab
 
 ```bash
 docker compose up -d --build
@@ -70,7 +55,7 @@ docker compose up -d --build
 
 ## Catatan pembelajaran
 
-Pada P1 mahasiswa belum diminta mencari vulnerability atau melakukan exploitation.
+Pada Pertemuan 1 mahasiswa belum diminta menemukan kerentanan atau melakukan eksploitasi.
 
 Fokus:
 1. mengenali sistem digital bandara,
