@@ -1,0 +1,66 @@
+services:
+  portal:
+    build: ./portal
+    container_name: airport-portal
+    volumes:
+      - ./portal:/var/www/html
+    ports:
+      - "8080:80"
+    depends_on:
+      - fids
+      - checkin
+
+  fids:
+    build: ./fids
+    container_name: airport-fids
+    volumes:
+      - ./fids:/var/www/html
+    ports:
+      - "8081:80"
+    environment:
+      API_URL: http://api
+    depends_on:
+      - api
+
+  checkin:
+    build: ./checkin
+    container_name: airport-checkin    
+    volumes:
+      - ./checkin:/var/www/html
+    ports:
+      - "8082:80"
+    environment:
+      API_URL: http://api
+    depends_on:
+      - api
+
+  api:
+    build: ./api
+    container_name: airport-api
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: airport
+      DB_USER: airport
+      DB_PASSWORD: airport
+    volumes:
+      - ./api:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mariadb:11
+    container_name: airport-db
+    environment:
+      MARIADB_DATABASE: airport
+      MARIADB_USER: airport
+      MARIADB_PASSWORD: airport
+      MARIADB_ROOT_PASSWORD: rootairport
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h localhost -u airport -pairport --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
