@@ -36,7 +36,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          name: "Release ${{ github.ref_name }}"
+          name: "Download ${{ github.ref_name }}"
           body: "Arsip materi dan kode sumber untuk folder `${{ github.ref_name }}`."
           files: "${{ github.ref_name }}.zip"
         env:
@@ -48,3 +48,6 @@ jobs:
           # git push origin main
           # git tag pert01
           # git push origin pert01
+
+          # git tag -f pert01
+          # git push origin pert01 --force
