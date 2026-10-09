@@ -1,0 +1,43 @@
+name: Auto Release Folder ZIP
+
+on:
+  push:
+    tags:
+      # Pemicu untuk tag dengan awalan "pert" (misal: pert01, pert02, pert1, pert_2)
+      - 'pert*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      # 1. Unduh repositori
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Kompres folder yang namanya sesuai dengan nama Tag
+      - name: Zip Target Folder
+        run: |
+          FOLDER="${{ github.ref_name }}"
+          
+          if [ -d "$FOLDER" ]; then
+            echo "Menemukan folder: $FOLDER. Mulai mengompres..."
+            cd "$FOLDER"
+            zip -r "../${FOLDER}.zip" .
+          else
+            echo "Error: Folder '$FOLDER' tidak ditemukan di repositori!"
+            exit 1
+          fi
+
+      # 3. Buat Release dan Unggah file ZIP
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "Release ${${ github.ref_name }}"
+          body: "Arsip materi dan kode sumber untuk folder `${{ github.ref_name }}`."
+          files: "${{ github.ref_name }}.zip"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
